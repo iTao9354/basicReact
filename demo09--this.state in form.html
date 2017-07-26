@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script src="plugins/react/react.js"></script>
+        <script src="plugins/react/react-dom.js"></script>
+        <script src="plugins/react/browser.min.js"></script>
+    </head>
+    <body>
+        <div id="box"></div>
+        <div id="box2"></div>
+        
+        <script type="text/babel">
+            var FormInput = React.createClass({
+                getInitialState: function() {
+                    return {value: 'Hello World!'};
+                },
+                handleChange: function(event) {
+                    this.setState({value:event.target.value});
+                },
+                render: function() {
+                    return <div>
+                                <input type="text" value={this.state.value} onChange={this.handleChange} />
+                                <p>{this.state.value}</p>
+                            </div>;
+                }
+            });
+            ReactDOM.render(
+                <FormInput />,
+                document.getElementById('box')
+            );
+        </script>
+    </body>
+</html>

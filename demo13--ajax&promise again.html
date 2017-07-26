@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script src="plugins/react/react.js"></script>
+        <script src="plugins/react/react-dom.js"></script>
+        <script src="plugins/react/browser.min.js"></script>
+        <script src="plugins/jquery-1.10.2.js"></script>
+    </head>
+    <body>
+        
+        <script type="text/babel">
+            var User = React.createClass({
+                // 设置默认状态
+                getInitialState: function() {
+                    return {
+                        loading: true,
+                        error: null,
+                        data: null
+                    };
+                },
+                // 插入dom后通过promise获取数据，并重新设置状态
+                componentDidMount: function() {
+                    this.props.promise.then(
+                        value => this.setState({loading: false, data: value}),
+                        error => this.setState({loading: false, error: error})
+                    );
+                },
+                render: function() {
+                    if(this.state.loading) {
+                        return <span>Loading...</span>;
+                    }else {
+                        var items = this.state.data.items;
+                        var itemList = items.map(function(item, index) {
+                            return (
+                                <li><a href={item.html_url}>{item.name}</a></li>
+                            );
+                        });
+                        return (
+                            <div>
+                                <h1>Learning Promise in ES6 and React!</h1>
+                                <ol>{itemList}</ol>
+                            </div>
+                        );
+                    }
+                }
+            });
+            ReactDOM.render(
+                <User promise={$.getJSON('https://api.github.com/search/repositories?q=javascript&sort=stars')} />,
+                document.body
+            );
+        </script>
+    </body>
+</html>

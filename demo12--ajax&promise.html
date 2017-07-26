@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script src="plugins/react/react.js"></script>
+        <script src="plugins/react/react-dom.js"></script>
+        <script src="plugins/react/browser.min.js"></script>
+        <script src="plugins/jquery-1.10.2.js"></script>
+    </head>
+    <body>
+        <div id="box"></div>
+        <div id="box2"></div>
+        
+        <script type="text/babel">
+            var User = React.createClass({
+                getInitialState: function() {
+                    return {
+                        loading: true,
+                        error: null,
+                        data: null
+                    };
+                },
+                componentDidMount: function() {
+                    // this.props.promise.then(function(value) {
+                    //     console.log(value);   // 成功
+                    // }, function(error) {
+                    //     console.log(error);   // 失败
+                    // });
+                    /**
+                     * 以上代码的另一种表达方式：ES6
+                     */
+                    this.props.promise.then(
+                        value => this.setState({loading: false, data: value}),
+                        error => this.setState({loading: false, error: error})
+                    );
+                },
+                render: function() {
+                    if(this.state.loading) {
+                        return <span>Loading...</span>;
+                    }else if(this.state.error !== null) {
+                        return <span>ERROR: {this.state.error.message}</span>;
+                    }else {
+                        var aItem = this.state.data.items;
+                        console.log(aItem.length);
+                        var itemList = aItem.map(function(item, index) {
+                            return (
+                                <li>
+                                    <a href={item.html_url}>{item.name}</a> ({item.stargazers_count} stars)
+                                    <p>{item.description}</p>
+                                </li>
+                            );
+                        })
+                        return (
+                            <div>
+                                <h1>Learning promise!</h1>
+                                <ol>{itemList}</ol>
+                            </div>
+                        );
+                    }
+                    
+                }
+            });
+
+            ReactDOM.render(
+                <User promise={$.getJSON('https://api.github.com/search/repositories?q=javascript&sort=stars')} />,
+                document.getElementById('box')
+            );
+        </script>
+    </body>
+</html>
